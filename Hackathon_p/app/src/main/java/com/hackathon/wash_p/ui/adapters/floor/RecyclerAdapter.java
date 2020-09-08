@@ -26,10 +26,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void setData(List<List_wash> list_washes){
         this.list_washes = list_washes;
     }
-    public void updateData(List<List_wash> list_washes){
-        this.list_washes = list_washes;
-        notifyDataSetChanged();
-    }
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView_name;
         public ViewHolder(@NonNull View itemView){

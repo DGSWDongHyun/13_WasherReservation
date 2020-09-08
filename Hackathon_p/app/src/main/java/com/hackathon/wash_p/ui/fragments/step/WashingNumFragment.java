@@ -18,6 +18,7 @@ import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
 import com.hackathon.wash_p.network.Server;
 import com.hackathon.wash_p.ui.adapters.floor.RecyclerAdapter;
+import com.hackathon.wash_p.ui.adapters.washer.RecyclerAdapter3;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import retrofit2.Response;
 public class WashingNumFragment extends Fragment {
     private List<List_wash> list_washList;
     private RecyclerView recyclerView;
-    private RecyclerAdapter adapter;
+    private RecyclerAdapter3 adapter;
     private Viewmodel_fragment fg;
     private Call<List<List_wash>> request;
     @Override
@@ -74,7 +75,7 @@ public class WashingNumFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        adapter = new RecyclerAdapter((position) -> {
+        adapter = new RecyclerAdapter3((position) -> {
         }, getActivity());
 
         addList();

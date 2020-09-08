@@ -40,11 +40,11 @@ public class DirectionFragment extends Fragment {
 
         list_washList.add(new List_wash(null, null, null, null, false,
                 null, null, current_Data.getFloor(),
-                null, "왼쪽"));
+                null, "좌편"));
 
         list_washList.add(new List_wash(null, null, null, null, false,
                 null, null, current_Data.getFloor(),
-                null, "오른쪽"));
+                null, "우편"));
 
         adapter.setData(list_washList);
     }
@@ -68,9 +68,9 @@ public class DirectionFragment extends Fragment {
             NavController controller = Navigation.findNavController(view);
             controller.navigate(R.id.action_directionFragment_to_washingNumFragment);
 
-            if(list_washList.get(position).getWay().contains("왼쪽"))
+            if(list_washList.get(position).getWay().contains("좌편"))
                 current_Data.setWay("left");
-            else if(list_washList.get(position).getWay().contains("오른쪽"))
+            else if(list_washList.get(position).getWay().contains("우편"))
                 current_Data.setWay("right");
 
         }, getActivity());

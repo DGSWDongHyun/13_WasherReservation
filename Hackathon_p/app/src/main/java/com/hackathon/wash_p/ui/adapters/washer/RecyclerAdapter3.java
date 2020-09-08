@@ -26,7 +26,10 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
     public void setData(List<List_wash> list_washes){
         this.list_washes = list_washes;
     }
-
+    public void updateData(List<List_wash> list_washes){
+        this.list_washes = list_washes;
+        notifyDataSetChanged();
+    }
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView_name;
         public ViewHolder(@NonNull View itemView){
@@ -38,7 +41,7 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_final, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_linear_final, parent, false);
         return new ViewHolder(view);
     }
 
