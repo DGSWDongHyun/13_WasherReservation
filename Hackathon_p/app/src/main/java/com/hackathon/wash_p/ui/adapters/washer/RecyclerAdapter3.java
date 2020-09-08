@@ -22,6 +22,9 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
     private List<List_wash> list_washes;
     private onItemClickListener listener;
     private Context context;
+    private int position;
+    private ViewHolder holder;
+
     private Response<List<List_wash>> response;
     public RecyclerAdapter3(onItemClickListener listener, Response<List<List_wash>> response, Context context){
         this.listener = listener;
@@ -54,6 +57,9 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List_wash list_wash = list_washes.get(position);
+
+        this.position = position;
+        this.holder = holder;
 
         holder.textView_name.setText(list_wash.getWasherNum() + "번 세탁기");
         if(list_wash.getCheckWasher()){

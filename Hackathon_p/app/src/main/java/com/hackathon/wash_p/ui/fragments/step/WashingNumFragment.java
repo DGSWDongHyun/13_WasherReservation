@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hackathon.wash_p.R;
+import com.hackathon.wash_p.data.request.Apply_wash;
 import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.data.response.result.Data_result;
 import com.hackathon.wash_p.network.Server;
+import com.hackathon.wash_p.ui.activites.main.MainActivity;
 import com.hackathon.wash_p.ui.adapters.floor.RecyclerAdapter;
 import com.hackathon.wash_p.ui.adapters.washer.RecyclerAdapter3;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,13 +48,18 @@ public class WashingNumFragment extends Fragment {
     private RecyclerAdapter3 adapter;
     private Viewmodel_fragment fg;
     private List_wash current_Data;
+    private Call<Data_result> results;
     private Call<List<List_wash>> request;
     private Response<List<List_wash>> responses;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide));
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
     public void addList(){
+
         list_washList  = new ArrayList<>();
 
         request = Server.getInstance().getApi().getData();
@@ -85,7 +95,7 @@ public class WashingNumFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
-
+        ((MainActivity)getActivity()).view(view , "washing");
         current_Data = fg.getWash().getValue();
 
         adapter = new RecyclerAdapter3((position) -> {
@@ -103,7 +113,7 @@ public class WashingNumFragment extends Fragment {
             dialogView.findViewById(R.id.confirm).setOnClickListener(view1 -> {
                 dialogs.dismiss();
             });
-            aboutWashing(list_washList, dialogView);
+            aboutWashing(list_washList, dialogView, position);
 
             dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
             dialogs.show();
@@ -116,7 +126,7 @@ public class WashingNumFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-    public void aboutWashing(List<List_wash> list, View dialogView){
+    public void aboutWashing(List<List_wash> list, View dialogView, int position){
         for(int idx = 0; idx < list.size(); idx++) {
             if(fg.getWash().getValue().getFloor().contains(list.get(idx).getFloor())
                     && fg.getWash().getValue().getWay().contains(list.get(idx).getWay())
@@ -134,34 +144,75 @@ public class WashingNumFragment extends Fragment {
 
 
 
-
                 if(list.get(idx).getWashEndTime() != null && list.get(idx).getWashStartTime() != null){
 
                     String date_start = dateSet.format(new Date(System.currentTimeMillis()));
-                    String date_End = dateSet.format(list.get(idx).getWashEndTime());
+                    String date_End = dateSet.format(list.get(idx).getWashEndTime().getTime() - 32400000);
 
                     try {
                         Date StartingWash = dateSet.parse(date_start);
                         Date EndWash = dateSet.parse(date_End);
 
-                        long diff = EndWash.getTime() - StartingWash.getTime();
+                        long diff = (EndWash.getTime()) - StartingWash.getTime();
 
-                        String result = dateSet_result.format(diff);
 
-                        textView_leftTime.setTextColor(getResources().getColor(R.color.Red));
-                        textView_leftTime.setText("남은 시간 : "+result);
+                        if( diff < 0 ) {
+                            Toast.makeText(getContext(),String.valueOf(diff),Toast.LENGTH_LONG).show();
+                            SimpleDateFormat dateSet2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String date_start2 = dateSet2.format(System.currentTimeMillis());
+                            String date_end2 = dateSet2.format(System.currentTimeMillis());
+
+                            Apply_wash apply_wash = new Apply_wash(list_washList.get(position).getFloor(),list_washList.get(position).getWasherNum(),list_washList.get(position).getWay(),null,null,null,null,false ,date_start2,date_end2);
+                            results = Server.getInstance().getApi().putData(apply_wash);
+
+
+
+                            results.enqueue(new Callback<Data_result>() {
+                                @Override
+                                public void onResponse(Call<Data_result> call, Response<Data_result> response) {
+                                    if(response.code() == 200){
+                                        Log.i("i", "Success : here to message \n "+response.body());
+                                    }else{
+                                        Log.i("i", "Failed : here to message \n "+response.message() + " " + response.code());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Data_result> call, Throwable t) {
+                                    Log.i("i", t.getMessage());
+                                }
+                            });
+
+                            if(list.get(idx).getWashStartTime() != null && list.get(idx).getWashEndTime() != null){
+                                textView_leftTime.setTextColor(getResources().getColor(R.color.Green));
+                                textView_leftTime.setText("사용 중인 사람이 없습니다.");
+                            }
+                        }else{
+                            String result = dateSet_result.format(diff);
+
+                            textView_leftTime.setTextColor(getResources().getColor(R.color.Red));
+                            textView_leftTime.setText("남은 시간 : "+result);
+                        }
+
                     }catch (ParseException e){
                         e.getMessage();
                     }
                 }else{
+
                     textView_leftTime.setTextColor(getResources().getColor(R.color.Green));
                     textView_leftTime.setText("사용 중인 사람이 없습니다.");
                 }
 
 
-
+                if(list.get(idx).getStudentName() == null || list.get(idx).getStudentName().isEmpty()) {
+                    textView_usingWho.setTextColor(getResources().getColor(R.color.Green));
+                    textView_usingWho.setText("사용 중인 사람이 없습니다.");
+                }else{
+                    textView_usingWho.setTextColor(getResources().getColor(R.color.Red));
+                    textView_usingWho.setText("사용 중인 사람 이름 : " + list.get(idx).getStudentName());
+                }
                 textView_title.setText(list.get(idx).getWasherNum() + "번 세탁기");
-                textView_usingWho.setText("사용 중인 사람 이름 : " + list.get(idx).getStudentName());
+
 
                 if(list.get(idx).getCheckWasher()){
                     textView_usingNow.setTextColor(getResources().getColor(R.color.Red));

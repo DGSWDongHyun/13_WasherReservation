@@ -11,12 +11,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.ui.activites.main.MainActivity;
 import com.hackathon.wash_p.ui.adapters.way.RecyclerAdapter2;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
@@ -33,16 +35,18 @@ public class DirectionFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide));
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
     public void addList(){
         list_washList  = new ArrayList<>();
 
-        list_washList.add(new List_wash(null, null, null, null, false,
+        list_washList.add(new List_wash(null, null, null, "", false,
                 null, null, current_Data.getFloor(),
                 null, "좌편"));
 
-        list_washList.add(new List_wash(null, null, null, null, false,
+        list_washList.add(new List_wash(null, null, null, "", false,
                 null, null, current_Data.getFloor(),
                 null, "우편"));
 
@@ -60,7 +64,7 @@ public class DirectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
-
+        ((MainActivity)getActivity()).view(view , "direction");
         current_Data = fg.getWash().getValue();
 
         adapter = new RecyclerAdapter2((position) -> {
