@@ -29,7 +29,7 @@ exports.washerRegister = async (req, res) => {
         console.error(error);
         const result = {
             status: 500,
-            message: '회원가입 실패'
+            message: '등록 실패'
         }
         res.status(500).json(result);
     }

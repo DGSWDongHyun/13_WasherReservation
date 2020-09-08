@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       checkWasher: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.BOOLEAN,
         allowNull: true,
-        defaultValue: 'NO',
+        defaultValue: false,
       },
       washStartTime: {
         type: 'TIMESTAMP',
