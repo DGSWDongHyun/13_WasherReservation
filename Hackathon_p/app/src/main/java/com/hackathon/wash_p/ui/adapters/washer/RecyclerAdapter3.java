@@ -1,5 +1,6 @@
 package com.hackathon.wash_p.ui.adapters.washer;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +16,17 @@ import com.hackathon.wash_p.ui.adapters.listener.onItemClickListener;
 
 import java.util.List;
 
+import retrofit2.Response;
+
 public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.ViewHolder> {
     private List<List_wash> list_washes;
     private onItemClickListener listener;
-    private FragmentActivity activity;
-    public RecyclerAdapter3(onItemClickListener listener, FragmentActivity activity){
+    private Context context;
+    private Response<List<List_wash>> response;
+    public RecyclerAdapter3(onItemClickListener listener, Response<List<List_wash>> response, Context context){
         this.listener = listener;
-        this.activity = activity;
+        this.response = response;
+        this.context = context;
     }
     public void setData(List<List_wash> list_washes){
         this.list_washes = list_washes;
@@ -31,10 +36,11 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
         notifyDataSetChanged();
     }
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView textView_name;
+        TextView textView_name, textView_usingNow;
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             textView_name = itemView.findViewById(R.id.item_name);
+            textView_usingNow = itemView.findViewById(R.id.usingNow);
         }
     }
 
@@ -50,6 +56,13 @@ public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.View
         List_wash list_wash = list_washes.get(position);
 
         holder.textView_name.setText(list_wash.getWasherNum() + "번 세탁기");
+        if(list_wash.getCheckWasher()){
+            holder.textView_usingNow.setTextColor(context.getColor(R.color.Red));
+            holder.textView_usingNow.setText("사용 불가능");
+        }else{
+            holder.textView_usingNow.setTextColor(context.getColor(R.color.Green));
+            holder.textView_usingNow.setText("사용 가능");
+        }
 
         holder.itemView.setOnClickListener(v->{
             listener.OnItemClick(position);

@@ -3,10 +3,12 @@ package com.hackathon.wash_p.ui.activites.main;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 
 import com.hackathon.wash_p.R;
+import com.hackathon.wash_p.ui.activites.intro.IntroActivity;
 import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
 import com.nightonke.boommenu.BoomButtons.HamButton;
 import com.nightonke.boommenu.BoomMenuButton;
@@ -23,7 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
         ActionBar ab = getSupportActionBar();
 
+
         ab.setTitle("세탁기를 선택하세요.");
+
+        startActivity(new Intent(getApplicationContext(), IntroActivity.class));
 
         bmb = findViewById(R.id.bmb);
 
