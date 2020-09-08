@@ -1,7 +1,5 @@
-package com.hackathon.wash_p.ui.adapters;
+package com.hackathon.wash_p.ui.adapters.floor;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +7,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
 import com.hackathon.wash_p.ui.adapters.listener.onItemClickListener;
-import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.util.List;
 
@@ -46,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_final, parent, false);
         return new ViewHolder(view);
     }
 

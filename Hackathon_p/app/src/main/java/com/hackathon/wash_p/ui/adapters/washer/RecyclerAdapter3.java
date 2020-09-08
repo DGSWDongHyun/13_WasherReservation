@@ -1,4 +1,4 @@
-package com.hackathon.wash_p.ui.adapters;
+package com.hackathon.wash_p.ui.adapters.washer;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,21 +7,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
 import com.hackathon.wash_p.ui.adapters.listener.onItemClickListener;
-import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.util.List;
 
-public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.ViewHolder> {
+public class RecyclerAdapter3 extends RecyclerView.Adapter<RecyclerAdapter3.ViewHolder> {
     private List<List_wash> list_washes;
     private onItemClickListener listener;
     private FragmentActivity activity;
-    public RecyclerAdapter2(onItemClickListener listener, FragmentActivity activity){
+    public RecyclerAdapter3(onItemClickListener listener, FragmentActivity activity){
         this.listener = listener;
         this.activity = activity;
     }
@@ -40,7 +38,7 @@ public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_final, parent, false);
         return new ViewHolder(view);
     }
 
@@ -48,7 +46,7 @@ public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List_wash list_wash = list_washes.get(position);
 
-        holder.textView_name.setText(list_wash.getWay());
+        holder.textView_name.setText(list_wash.getWasherNum() + "번 세탁기");
 
         holder.itemView.setOnClickListener(v->{
             listener.OnItemClick(position);
