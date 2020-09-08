@@ -48,6 +48,11 @@ dependencies {
 
     //UI/UX lib
     implementation 'com.nightonke:boommenu:2.1.1'
+    implementation 'com.airbnb.android:lottie:2.1.0'
+
+    //viewmodel
+    def lifecycle_version = "1.1.1"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
 }
 repositories {
     mavenCentral()

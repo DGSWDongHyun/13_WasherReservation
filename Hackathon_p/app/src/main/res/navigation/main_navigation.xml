@@ -11,12 +11,21 @@
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_applyFragment"
-            app:destination="@id/applyFragment" />
+            android:id="@+id/action_mainFragment_to_directionFragment"
+            app:destination="@id/directionFragment" />
     </fragment>
     <fragment
-        android:id="@+id/applyFragment"
-        android:name="com.hackathon.wash_p.ui.fragments.apply.ApplyFragment"
-        android:label="fragment_apply"
-        tools:layout="@layout/fragment_apply" />
+        android:id="@+id/washingNumFragment"
+        android:name="com.hackathon.wash_p.ui.fragments.step.WashingNumFragment"
+        android:label="fragment_washing_num"
+        tools:layout="@layout/fragment_washing_num" />
+    <fragment
+        android:id="@+id/directionFragment"
+        android:name="com.hackathon.wash_p.ui.fragments.step.DirectionFragment"
+        android:label="fragment_direction"
+        tools:layout="@layout/fragment_direction" >
+        <action
+            android:id="@+id/action_directionFragment_to_washingNumFragment"
+            app:destination="@id/washingNumFragment" />
+    </fragment>
 </navigation>
