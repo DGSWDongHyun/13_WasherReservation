@@ -40,10 +40,17 @@ module.exports = (sequelize, DataTypes) => {
       washEndTime: {
         type: 'TIMESTAMP',
         allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()')
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()')
       }
     }, {
       charset:'utf8',
-      collate:'utf8_general_ci',
     });
     return washer;
 };
