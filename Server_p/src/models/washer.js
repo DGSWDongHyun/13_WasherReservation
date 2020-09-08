@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       checkWasher: {
-        type: DataTypes.STRING(10),
+        type: DataTypes.BOOLEAN,
         allowNull: true,
-        defaultValue: 'NO',
+        defaultValue: false,
       },
       washStartTime: {
         type: 'TIMESTAMP',
@@ -40,10 +40,17 @@ module.exports = (sequelize, DataTypes) => {
       washEndTime: {
         type: 'TIMESTAMP',
         allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()')
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        defaultValue: sequelize.literal('NOW()')
       }
     }, {
       charset:'utf8',
-      collate:'utf8_general_ci',
     });
     return washer;
 };
