@@ -1,4 +1,4 @@
-package com.hackathon.wash_p.ui.fragments.main;
+package com.hackathon.wash_p.ui.fragments.step;
 
 import android.os.Bundle;
 
@@ -20,69 +20,66 @@ import android.widget.Toast;
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
 import com.hackathon.wash_p.ui.adapters.RecyclerAdapter;
+import com.hackathon.wash_p.ui.adapters.RecyclerAdapter2;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import retrofit2.Call;
 
-
-public class MainFragment extends Fragment {
-    private RecyclerAdapter adapter;
-    private RecyclerView recyclerView;
-    private List<List_wash> list_washList;
-    private Call<List<List_wash>> request;
+public class DirectionFragment extends Fragment {
     private Viewmodel_fragment fg;
+    private List_wash current_Data;
+    private List<List_wash> list_washList;
+    private RecyclerView recyclerView;
+    private RecyclerAdapter2 adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View root  = inflater.inflate(R.layout.fragment_main, container, false);
-        return root;
     }
     public void addList(){
         list_washList  = new ArrayList<>();
 
         list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "3F",
-                null, null));
+                null, null, current_Data.getFloor(),
+                null, "왼쪽"));
 
         list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "4F",
-                null, null));
-
-        list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "5F",
-                null, null));
+                null, null, current_Data.getFloor(),
+                null, "오른쪽"));
 
         adapter.setData(list_washList);
     }
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View root =inflater.inflate(R.layout.fragment_direction, container, false);
+
+        return root;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
 
-        adapter = new RecyclerAdapter((position) -> {
-
-            fg.setWash(list_washList.get(position));
+        adapter = new RecyclerAdapter2((position) -> {
 
             NavController controller = Navigation.findNavController(view);
-            controller.navigate(R.id.action_mainFragment_to_directionFragment);
-
+            controller.navigate(R.id.action_directionFragment_to_washingNumFragment);
         }, getActivity());
+
+        current_Data = fg.getWash().getValue();
+
+        Toast.makeText(getContext(), current_Data.getFloor(), Toast.LENGTH_LONG).show();
+
+        recyclerView = view.findViewById(R.id.recyclerView_direc);
 
         addList();
 
-        recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 }

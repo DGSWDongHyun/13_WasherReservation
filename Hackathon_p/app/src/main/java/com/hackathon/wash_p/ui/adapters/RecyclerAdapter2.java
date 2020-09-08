@@ -1,7 +1,5 @@
 package com.hackathon.wash_p.ui.adapters;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,27 +17,23 @@ import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.ViewHolder> {
     private List<List_wash> list_washes;
     private onItemClickListener listener;
     private FragmentActivity activity;
-    public RecyclerAdapter(onItemClickListener listener, FragmentActivity activity){
+    public RecyclerAdapter2(onItemClickListener listener, FragmentActivity activity){
         this.listener = listener;
         this.activity = activity;
     }
     public void setData(List<List_wash> list_washes){
         this.list_washes = list_washes;
     }
-    public void updateData(List<List_wash> list_washes){
-        this.list_washes = list_washes;
-        notifyDataSetChanged();
-    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView textView_name;
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             textView_name = itemView.findViewById(R.id.item_name);
-
         }
     }
 
@@ -54,7 +48,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List_wash list_wash = list_washes.get(position);
 
-            holder.textView_name.setText(list_wash.getFloor());
+        holder.textView_name.setText(list_wash.getWay());
 
         holder.itemView.setOnClickListener(v->{
             listener.OnItemClick(position);
@@ -66,3 +60,4 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return list_washes.size();
     }
 }
+

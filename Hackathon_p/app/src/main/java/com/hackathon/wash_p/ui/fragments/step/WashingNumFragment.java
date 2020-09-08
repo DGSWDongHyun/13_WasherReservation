@@ -1,24 +1,24 @@
-package com.hackathon.wash_p.ui.fragments.main;
+package com.hackathon.wash_p.ui.fragments.step;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.network.Server;
 import com.hackathon.wash_p.ui.adapters.RecyclerAdapter;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
@@ -27,61 +27,58 @@ import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
-public class MainFragment extends Fragment {
-    private RecyclerAdapter adapter;
-    private RecyclerView recyclerView;
+public class WashingNumFragment extends Fragment {
     private List<List_wash> list_washList;
-    private Call<List<List_wash>> request;
+    private RecyclerView recyclerView;
+    private RecyclerAdapter adapter;
     private Viewmodel_fragment fg;
+    private Call<List<List_wash>> request;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View root  = inflater.inflate(R.layout.fragment_main, container, false);
-        return root;
-    }
     public void addList(){
         list_washList  = new ArrayList<>();
 
-        list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "3F",
-                null, null));
+        request = Server.getInstance().getApi().getData();
 
-        list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "4F",
-                null, null));
+        request.enqueue(new Callback<List<List_wash>>() {
+            @Override
+            public void onResponse(Call<List<List_wash>> call, Response<List<List_wash>> response) {
+                if(response.code() == 200){
+                    Log.i("i", "Success : here to message \n "+response.body());
+                    adapter.updateData(response.body());
+                }else{
+                    Log.i("i", "Failed : here to message \n "+response.message());
+                }
+            }
 
-        list_washList.add(new List_wash(null, null, null, null, false,
-                null, null, "5F",
-                null, null));
+            @Override
+            public void onFailure(Call<List<List_wash>> call, Throwable t) {
+
+            }
+        });
 
         adapter.setData(list_washList);
     }
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+       View root = inflater.inflate(R.layout.fragment_washing_num, container, false);
+        return root;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
-
-        adapter = new RecyclerAdapter((position) -> {
-
-            fg.setWash(list_washList.get(position));
-
-            NavController controller = Navigation.findNavController(view);
-            controller.navigate(R.id.action_mainFragment_to_directionFragment);
-
-        }, getActivity());
-
         addList();
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.recyclerView_wash);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
