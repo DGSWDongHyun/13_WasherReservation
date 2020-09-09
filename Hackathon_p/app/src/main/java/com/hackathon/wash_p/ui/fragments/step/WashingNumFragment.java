@@ -16,23 +16,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hackathon.wash_p.R;
-import com.hackathon.wash_p.data.request.Apply_wash;
-import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.data.request.apply.Apply_wash;
+import com.hackathon.wash_p.data.response.list.List_wash;
 import com.hackathon.wash_p.data.response.result.Data_result;
 import com.hackathon.wash_p.network.Server;
-import com.hackathon.wash_p.ui.activites.main.MainActivity;
-import com.hackathon.wash_p.ui.adapters.floor.RecyclerAdapter;
 import com.hackathon.wash_p.ui.adapters.washer.RecyclerAdapter3;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,7 +90,6 @@ public class WashingNumFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
-        ((MainActivity)getActivity()).view(view , "washing");
         current_Data = fg.getWash().getValue();
 
         adapter = new RecyclerAdapter3((position) -> {
@@ -147,7 +141,7 @@ public class WashingNumFragment extends Fragment {
                 if(list.get(idx).getWashEndTime() != null && list.get(idx).getWashStartTime() != null){
 
                     String date_start = dateSet.format(new Date(System.currentTimeMillis()));
-                    String date_End = dateSet.format(list.get(idx).getWashEndTime().getTime() - 32400000);
+                    String date_End = dateSet.format(list.get(idx).getWashEndTime().getTime());
 
                     try {
                         Date StartingWash = dateSet.parse(date_start);
@@ -157,7 +151,6 @@ public class WashingNumFragment extends Fragment {
 
 
                         if( diff < 0 ) {
-                            Toast.makeText(getContext(),String.valueOf(diff),Toast.LENGTH_LONG).show();
                             SimpleDateFormat dateSet2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String date_start2 = dateSet2.format(System.currentTimeMillis());
                             String date_end2 = dateSet2.format(System.currentTimeMillis());

@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hackathon.wash_p.R;
-import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.data.response.list.List_wash;
 import com.hackathon.wash_p.ui.adapters.listener.onItemClickListener;
 
 import java.util.List;

@@ -17,8 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hackathon.wash_p.R;
-import com.hackathon.wash_p.data.response.List_wash;
-import com.hackathon.wash_p.ui.activites.main.MainActivity;
+import com.hackathon.wash_p.data.response.list.List_wash;
 import com.hackathon.wash_p.ui.adapters.way.RecyclerAdapter2;
 import com.hackathon.wash_p.viewmodel.Viewmodel_fragment;
 
@@ -64,7 +63,6 @@ public class DirectionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fg = ViewModelProviders.of(getActivity()).get(Viewmodel_fragment.class);
-        ((MainActivity)getActivity()).view(view , "direction");
         current_Data = fg.getWash().getValue();
 
         adapter = new RecyclerAdapter2((position) -> {
