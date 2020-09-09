@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this)
                                     .setView(dialogView_b)
-                                    .setCancelable(false);
+                                    .setCancelable(true);
                             string = getStringArrayPref(getApplicationContext(), KEY);
                             AlertDialog dialog = builder.create();
                             TextView textView_name = dialogView_b.findViewById(R.id.names);
