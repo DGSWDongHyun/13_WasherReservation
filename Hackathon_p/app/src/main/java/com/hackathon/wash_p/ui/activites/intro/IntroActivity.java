@@ -25,4 +25,9 @@ public class IntroActivity extends AppCompatActivity {
             }
      ,2500);
     }
+
+    @Override
+    public void onBackPressed(){
+        return;
+    }
 }

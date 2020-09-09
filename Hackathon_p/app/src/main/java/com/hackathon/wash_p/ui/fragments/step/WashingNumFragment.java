@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.request.apply.Apply_wash;
@@ -147,13 +148,20 @@ public class WashingNumFragment extends Fragment {
                         Date StartingWash = dateSet.parse(date_start);
                         Date EndWash = dateSet.parse(date_End);
 
+
                         long diff = (EndWash.getTime()) - StartingWash.getTime();
 
 
                         if( diff < 0 ) {
                             SimpleDateFormat dateSet2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String date_start2 = dateSet2.format(System.currentTimeMillis());
-                            String date_end2 = dateSet2.format(System.currentTimeMillis());
+                            String date_end2 = dateSet2.format(System.currentTimeMillis() - 60000);
+
+                            textView_usingWho.setTextColor(getResources().getColor(R.color.Green));
+                            textView_usingWho.setText("사용 중인 사람이 없습니다.");
+
+                            textView_leftTime.setTextColor(getResources().getColor(R.color.Green));
+                            textView_leftTime.setText("사용 중인 사람이 없습니다.");
 
                             Apply_wash apply_wash = new Apply_wash(list_washList.get(position).getFloor(),list_washList.get(position).getWasherNum(),list_washList.get(position).getWay(),null,null,null,null,false ,date_start2,date_end2);
                             results = Server.getInstance().getApi().putData(apply_wash);
@@ -191,13 +199,12 @@ public class WashingNumFragment extends Fragment {
                         e.getMessage();
                     }
                 }else{
-
                     textView_leftTime.setTextColor(getResources().getColor(R.color.Green));
                     textView_leftTime.setText("사용 중인 사람이 없습니다.");
                 }
 
 
-                if(list.get(idx).getStudentName() == null || list.get(idx).getStudentName().isEmpty()) {
+                if(list.get(idx).getStudentName() == null || list.get(idx).getStudentName().isEmpty() || list.get(idx).getCheckWasher() == false) {
                     textView_usingWho.setTextColor(getResources().getColor(R.color.Green));
                     textView_usingWho.setText("사용 중인 사람이 없습니다.");
                 }else{

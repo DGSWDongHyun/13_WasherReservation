@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hackathon.wash_p.R;
 import com.hackathon.wash_p.data.request.apply.Apply_wash;
@@ -47,6 +48,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     Spinner s,s2,s3,s4;
     BoomMenuButton bmb;
+    private Call<List<List_wash>> request;
     List<List_wash> list_washes;
     private Viewmodel_fragment fg;
     String[] arr_spin_floor = {"3","4","5"};
@@ -70,8 +72,9 @@ public class MainActivity extends AppCompatActivity {
         bmb = findViewById(R.id.bmb);
 
         bmb.setButtonEnum(ButtonEnum.Ham);
-        bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_2);
-        bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_2);
+        bmb.setPiecePlaceEnum(PiecePlaceEnum.HAM_1);
+        bmb.setButtonPlaceEnum(ButtonPlaceEnum.HAM_1);
+
 
 
             HamButton.Builder builder = new HamButton.Builder()
@@ -102,16 +105,60 @@ public class MainActivity extends AppCompatActivity {
                             dialogView_b.findViewById(R.id.confirm_post).setOnClickListener(view1 -> {
 
 
-                                /*request = Server.getInstance().getApi().getData();
+                                request = Server.getInstance().getApi().getData();
 
                                 request.enqueue(new Callback<List<List_wash>>() {
                                     @Override
                                     public void onResponse(Call<List<List_wash>> call, Response<List<List_wash>> response) {
-                                        if(response.code() == 200){
-                                            Log.i("i", "Success : here to message \n "+response.body());
-                                            list_washes = response.body();
+                                        if(response.code() == 200) {
+                                            Log.i("i", "Success : here to message \n " + response.body());
+
+                                            for (int i = 0; i < response.body().size(); i++) {
+                                                    if (response.body().get(i).getWasherNum().equals(s3.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getFloor().equals(s.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getWay().equals(s2.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getCheckWasher() == false) {
+
+                                                        SimpleDateFormat dateSet = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                                        String date_start = dateSet.format(new Date(System.currentTimeMillis()));
+                                                        String date_end = s4.getSelectedItem().toString().equals("1") ? dateSet.format(new Date(System.currentTimeMillis() + 3600000)) : dateSet.format(new Date(System.currentTimeMillis() + 7200000));
+
+                                                        fg = ViewModelProviders.of(MainActivity.this).get(Viewmodel_fragment.class);
+
+
+                                                        Apply_wash apply_wash = new Apply_wash(s.getSelectedItem().toString(), s3.getSelectedItem().toString(), s2.getSelectedItem().toString(), string.get(0), string.get(1), string.get(2), string.get(3), true, date_start, date_end);
+                                                        results = Server.getInstance().getApi().putData(apply_wash);
+
+
+                                                        results.enqueue(new Callback<Data_result>() {
+                                                            @Override
+                                                            public void onResponse(Call<Data_result> call, Response<Data_result> response) {
+                                                                if (response.code() == 200) {
+                                                                    Log.i("i", "Success : here to message \n " + response.body());
+
+                                                                    Toast.makeText(getApplicationContext(), "등록이 완료되었습니다.", Toast.LENGTH_LONG).show();
+                                                                    return;
+                                                                } else {
+                                                                    Log.i("i", "Failed : here to message \n " + response.message() + " " + response.code());
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Data_result> call, Throwable t) {
+                                                                Log.i("i", t.getMessage());
+                                                            }
+                                                        });
+
+                                                        break;
+                                                    } else if(response.body().get(i).getWasherNum().equals(s3.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getFloor().equals(s.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getWay().equals(s2.getSelectedItem().toString()) &&
+                                                            response.body().get(i).getCheckWasher() == true ) {
+                                                        Toast.makeText(getApplicationContext(), "이미 등록되어서 이용 중인 세탁기 입니다.", Toast.LENGTH_LONG).show();
+                                                    }
+                                            }
                                         }else{
-                                            Log.i("i", "Failed : here to message \n "+response.message());
+                                            Log.i("i", "Failed : here to message \n " + response.message());
                                         }
                                     }
 
@@ -120,35 +167,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     }
                                 });
-                                //2020.09.08 23:29 end - 중복 체크 마무리 해야함.*/
-
-                                SimpleDateFormat dateSet = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String date_start = dateSet.format(new Date(System.currentTimeMillis()));
-                                String date_end = s4.getSelectedItem().toString().equals("1") ? dateSet.format(new Date(System.currentTimeMillis() + 3600000)) : dateSet.format(new Date(System.currentTimeMillis() + 7200000));
-
-                                fg = ViewModelProviders.of(MainActivity.this).get(Viewmodel_fragment.class);
 
 
-                                Apply_wash apply_wash = new Apply_wash(s.getSelectedItem().toString(),s3.getSelectedItem().toString(),s2.getSelectedItem().toString(),string.get(0),string.get(1),string.get(2),string.get(3),true,date_start,date_end);
-                                results = Server.getInstance().getApi().putData(apply_wash);
-
-
-
-                                results.enqueue(new Callback<Data_result>() {
-                                    @Override
-                                    public void onResponse(Call<Data_result> call, Response<Data_result> response) {
-                                        if(response.code() == 200){
-                                            Log.i("i", "Success : here to message \n "+response.body());
-                                        }else{
-                                            Log.i("i", "Failed : here to message \n "+response.message() + " " + response.code());
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<Data_result> call, Throwable t) {
-                                        Log.i("i", t.getMessage());
-                                    }
-                                });
                                 dialog.dismiss();
                             });
 
@@ -158,14 +178,9 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-             HamButton.Builder builder2 = new HamButton.Builder()
-                    .normalImageRes(R.drawable.washing_icon)
-                     .imagePadding(new Rect(20,20,20,20))
-                    .normalText("삭제")
-                    .subNormalText("세탁기 이용 내역을 삭제 할 수 있습니다.");
+
 
                     bmb.addBuilder(builder);
-                    bmb.addBuilder(builder2);
         }
         public void setUpSpinner(View view){
 

@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.hackathon.wash_p.R;
@@ -47,7 +48,6 @@ public class MainFragment extends Fragment {
     private Call<List<List_wash>> request;
     private Viewmodel_fragment fg;
     private static final String KEY = "KEY_STUDENT";
-    private List<List_wash> results1;
     private ArrayList<String> student;
 
     @Override
@@ -135,6 +135,8 @@ public class MainFragment extends Fragment {
 
             dialog.show();
         }else{
+            list_Section_return(view);
+
             for(int i = 0; i < student.size(); i ++){
                 if(student.get(i).isEmpty() || student.get(i) == null) {
                     View dialogView_c = getLayoutInflater().inflate(R.layout.dialog_name, null);
@@ -178,41 +180,48 @@ public class MainFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
-    public List_wash list_Section_return(){
+    public void list_Section_return(View view){
+        if(student == null) {
 
-        request = Server.getInstance().getApi().getData();
+        }else{
+            request = Server.getInstance().getApi().getData();
 
+            request.enqueue(new Callback<List<List_wash>>() {
+                @Override
+                public void onResponse(Call<List<List_wash>> call, Response<List<List_wash>> response) {
+                    if(response.code() == 200){
+                        Log.i("i", "Success : here to message \n "+response.body());
 
+                        for(int idx = 0; idx < response.body().size(); idx ++){
+                            if( response.body().get(idx).getCheckWasher()
+                                    && response.body().get(idx).getClassNum().equals(student.get(1))
+                                    && response.body().get(idx).getGrade().equals(student.get(0))
+                                    && response.body().get(idx).getStudentNum().equals(student.get(2))){
 
-        request.enqueue(new Callback<List<List_wash>>() {
-            @Override
-            public void onResponse(Call<List<List_wash>> call, Response<List<List_wash>> response) {
-                if(response.code() == 200){
-                    Log.i("i", "Success : here to message \n "+response.body());
-                    results1 = response.body();
-                }else{
-                    Log.i("i", "Failed : here to message \n "+response.message() + " " + response.code());
+                                TextView tv = view.findViewById(R.id.title_w);
+                                TextView tv_c = view.findViewById(R.id.contents);
+
+                                tv.setText("세탁기를 사용 중이시네요!");
+                                String rs_floor = response.body().get(idx).getFloor().equals("3") ? "3" : response.body().get(idx).getFloor().equals("4") ? "4" : "5";
+                                String rs_direction = response.body().get(idx).getFloor().equals("left") ? "오른쪽( 우편 )" : "왼쪽( 좌편 )";
+                                tv_c.setText("현재 본인이 사용하고 계신 세탁기는 \n"+ rs_floor +"층"+" " + rs_direction +"방향 "+ response.body().get(idx).getWasherNum()+"번 세탁기입니다.");
+                                break;
+                            }
+                        }
+
+                    }else{
+                        Log.i("i", "Failed : here to message \n "+response.message() + " " + response.code());
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<List_wash>> call, Throwable t) {
-                Log.i("i", t.getMessage());
-            }
-        });
-
-
-        for(int idx = 0 ; idx < results1.size(); idx ++){
-            if(results1.get(idx).getStudentName().equals("")
-                    && results1.get(idx).getClassNum().equals("")
-                    && results1.get(idx).getGrade().equals("")
-                    && results1.get(idx).getStudentNum().equals("")){
-
-            }
+                @Override
+                public void onFailure(Call<List<List_wash>> call, Throwable t) {
+                    Log.i("i", t.getMessage());
+                }
+            });
         }
 
 
-        return null;
     }
     @Override
     public void onStop(){
