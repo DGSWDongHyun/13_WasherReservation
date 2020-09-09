@@ -1,7 +1,8 @@
 package com.hackathon.wash_p.network;
 
-import com.hackathon.wash_p.data.request.Apply_wash;
-import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.data.request.apply.Apply_wash;
+import com.hackathon.wash_p.data.request.delete.Delete_wash;
+import com.hackathon.wash_p.data.response.list.List_wash;
 import com.hackathon.wash_p.data.response.result.Data_result;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface ServerAPI {
 
     @GET("/washerCtrl/getWashers")
     Call<List<List_wash>> getData();
+
+    @POST
+    Call<Data_result> deleteData(@Body Delete_wash delete_wash);
 }

@@ -1,4 +1,4 @@
-package com.hackathon.wash_p.data.response
+package com.hackathon.wash_p.data.response.list
 
 import java.util.*
 

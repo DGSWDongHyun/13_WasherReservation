@@ -4,8 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.hackathon.wash_p.data.request.Apply_wash;
-import com.hackathon.wash_p.data.response.List_wash;
+import com.hackathon.wash_p.data.response.list.List_wash;
 
 public class Viewmodel_fragment extends ViewModel {
 
@@ -18,5 +17,6 @@ public class Viewmodel_fragment extends ViewModel {
     public void setWash(List_wash wash){
         live_Data.setValue(wash);
     }
+
 
 }

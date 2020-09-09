@@ -1,4 +1,4 @@
-package com.hackathon.wash_p.data.request
+package com.hackathon.wash_p.data.request.apply
 
 import java.time.LocalDate
 import java.time.LocalDateTime
