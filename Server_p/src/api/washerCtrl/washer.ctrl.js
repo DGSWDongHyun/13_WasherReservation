@@ -52,60 +52,6 @@ exports.washerRegister = async (req, res) => {
     }
 };
 
-// 세탁기 삭제
-exports.deleteWashers = async (req, res) => {
-    const { floor, washerNum, way, grade, classNum, studentNum, studentName } = req.body;
-    try {
-        const washerData = await models.Washer.findAll({
-            where: {
-                floor,
-                washerNum,
-                way,
-                grade,
-                classNum,
-                studentNum,
-                studentName,
-            },
-            raw: true
-        });
-        if(washerData.length > 0) {
-            await models.Washer.update({
-                grade: null,
-                classNum: null,
-                studentNum: null,
-                studentName: null,
-                checkWasher: false, 
-                washStartTime: '0000-00-00 00:00:00', 
-                washEndTime: '0000-00-00 00:00:00'
-            }, {
-                where: 
-                {
-                    floor: floor, 
-                    washerNum: washerNum, 
-                    way: way
-                }
-            })
-            const result = {
-                status: 200,
-                message: '세탁기 삭제가 완료되었습니다.',
-            }
-            res.status(200).json(result);
-        } else {
-            const result = {
-                status: 403,
-                message: '뭔가 잘못됬습니다.',
-            }
-            res.status(403).json(result);
-        }
-    } catch (error) {
-        const result = {
-            status: 500,
-            message: '삭제실패',
-        }
-        res.status(500).json(result);
-    }
-}
-
 // 세탁기 조회
 exports.getWashers = async (req, res) => {
     try {
