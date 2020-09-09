@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       washStartTime: {
         type: 'TIMESTAMP',
         allowNull: true,
+        defaultValue: '0000-00-00 00:00:00'
       },
       washEndTime: {
         type: 'TIMESTAMP',
